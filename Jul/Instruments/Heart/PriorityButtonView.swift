@@ -21,32 +21,38 @@ struct PriorityButtonView<Model: Identifiable>: View {
     var body: some View {
         GeometryReader { geo in
             Button {
-                let willAdd = !(isHasPriority.wrappedValue ?? false)
                 frame = geo.frame(in: .global)
+                let willAdd = !(isHasPriority.wrappedValue ?? false)
                 onTriggerCenterAnimation(willAdd, frame)
 
                 if willAdd {
                     isHasPriority.wrappedValue = true
                     priorityStatus.wrappedValue = getNextPriorityStatus()
+                    animationManager.currentColor = .pink
                 } else {
                     isHasPriority.wrappedValue = false
                     priorityStatus.wrappedValue = nil
+                    animationManager.currentColor = .white
                 }
 
                 onSave()
             } label: {
                 HeartShape()
                     .fill(animationManager.currentColor)
-                    .overlay(
-                        HeartShape()
-                            .stroke(Color.black, lineWidth: 2)
-                    )
+                    .overlay(HeartShape().stroke(Color.black, lineWidth: 2))
                     .frame(width: 40, height: 40)
-                    .animation(.easeInOut(duration: 0.8), value: animationManager.currentColor) 
+                    .animation(.easeInOut(duration: 0.8), value: animationManager.currentColor)
             }
             .buttonStyle(.plain)
         }
         .frame(width: 44, height: 44)
+        .onAppear {
+            if let status = priorityStatus.wrappedValue {
+                animationManager.currentColor = Color("SoftClay")
+            } else {
+                animationManager.currentColor = .white
+            }
+        }
     }
 
     private func getNextPriorityStatus() -> String? {

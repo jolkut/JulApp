@@ -61,7 +61,7 @@ struct CardCosmetic: View {
                     configurationToDelete: $configurationToDelete,
                     errorMessage: $errorMessage
                 )
-                                
+                
                 HStack {
                     Text("Size: \(cosmetics.size)")
                         .font(.subheadline)

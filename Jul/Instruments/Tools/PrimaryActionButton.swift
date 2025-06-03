@@ -20,7 +20,7 @@ struct PrimaryActionButton: View {
             Text(title)
                 .fontWeight(.bold)
                 .frame(width: width, height: height)
-                .background(Color("PaleDogwood"))
+                .background(Color("SoftClay"))
                 .foregroundColor(Color("DeepAsh"))
                 .cornerRadius(8)
         }
