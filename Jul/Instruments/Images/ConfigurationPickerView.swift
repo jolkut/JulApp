@@ -7,15 +7,16 @@
 import SwiftUI
 import SwiftData
 
-protocol ConfigurableItem: AnyObject {
+protocol ConfigurableItem: AnyObject & Observable {
     associatedtype Configuration: Identifiable & Equatable & Hashable
     var configurations: [Configuration] { get set }
 }
 
 struct ConfigurationPickerView<Item: ConfigurableItem>: View {
     @Environment(\.modelContext) private var modelContext
-    var item: Item
 
+    @Bindable var item: Item 
+    
     let getTitle: (Item.Configuration) -> String
     let getImage: (Item.Configuration) -> Data?
     let setImage: (inout Item.Configuration, Data) -> Void
@@ -32,7 +33,6 @@ struct ConfigurationPickerView<Item: ConfigurableItem>: View {
 
     var body: some View {
         VStack(spacing: 12) {
-
             HStack {
                 Text("Configuration:")
                     .font(.subheadline)
@@ -83,7 +83,11 @@ struct ConfigurationPickerView<Item: ConfigurableItem>: View {
         .sheet(isPresented: $showAddSheet, onDismiss: {
             selectedConfiguration = item.configurations.last
         }) {
-            EmptyView()
+            if let cosmetic = item as? Cosmetic {
+                AddConfigurationViewCosmetic(cosmetic: cosmetic)
+            } else {
+                Text("Unsupported item type")
+            }
         }
         .alert("Delete this configuration?", isPresented: $showDeleteAlert) {
             Button("Delete", role: .destructive) {
